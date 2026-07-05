@@ -60,5 +60,9 @@ public class VectorStoreService {
         return sb.toString();
     }
 
+    public void deleteChunksForDocument(UUID documentId) {
+        jdbcTemplate.update("DELETE FROM chunks WHERE document_id = ?", documentId);
+    }
+
     public record RetrievedChunk(String documentName, String content, double similarity) {}
 }

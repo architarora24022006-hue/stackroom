@@ -42,23 +42,23 @@ CREATE TABLE documents (
 
 CREATE INDEX idx_documents_repository_id ON documents(repository_id);
 
--- Ollama's nomic-embed-text produces 768-dimensional vectors
+-- Gemini's gemini-embedding-001 produces 3072-dimensional vectors by default
 CREATE TABLE chunks (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     document_id UUID NOT NULL REFERENCES documents(id) ON DELETE CASCADE,
     repository_id UUID NOT NULL REFERENCES repositories(id) ON DELETE CASCADE,
     chunk_index INTEGER NOT NULL,
     content TEXT NOT NULL,
-    embedding vector(768) NOT NULL,
+    embedding vector(3072) NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 CREATE INDEX idx_chunks_document_id ON chunks(document_id);
 CREATE INDEX idx_chunks_repository_id ON chunks(repository_id);
 
--- Approximate nearest-neighbor index for cosine similarity search
-CREATE INDEX idx_chunks_embedding_cosine ON chunks
-    USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
+-- Note: no similarity index here — pgvector's ivfflat/hnsw indexes cap out at
+-- 2000 dimensions, and Gemini's default embedding size is 3072. A direct
+-- (sequential) scan is perfectly fine for the size of a team knowledge base.
 
 CREATE TABLE qa_history (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

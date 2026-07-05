@@ -17,23 +17,23 @@ import java.util.stream.Collectors;
 @Service
 public class RagService {
 
-    private final OllamaClient ollamaClient;
+    private final GeminiClient geminiClient;
     private final VectorStoreService vectorStoreService;
     private final QaHistoryRepository qaHistoryRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final int topK;
 
-    public RagService(OllamaClient ollamaClient, VectorStoreService vectorStoreService,
+    public RagService(GeminiClient geminiClient, VectorStoreService vectorStoreService,
                        QaHistoryRepository qaHistoryRepository,
                        @Value("${app.rag.top-k}") int topK) {
-        this.ollamaClient = ollamaClient;
+        this.geminiClient = geminiClient;
         this.vectorStoreService = vectorStoreService;
         this.qaHistoryRepository = qaHistoryRepository;
         this.topK = topK;
     }
 
     public AskResponse ask(Repository repository, User askedBy, String question) {
-        float[] queryEmbedding = ollamaClient.embed(question);
+        float[] queryEmbedding = geminiClient.embed(question);
 
         List<VectorStoreService.RetrievedChunk> retrieved =
                 vectorStoreService.findSimilarChunks(repository.getId(), queryEmbedding, topK);
@@ -54,7 +54,7 @@ public class RagService {
             """;
         String userPrompt = "Context:\n" + context + "\n\nQuestion: " + question;
 
-        String answer = ollamaClient.chat(systemPrompt, userPrompt);
+        String answer = geminiClient.chat(systemPrompt, userPrompt);
 
         List<SourceDto> sources = retrieved.stream()
                 .map(c -> new SourceDto(c.documentName(), truncate(c.content(), 240), round(c.similarity())))

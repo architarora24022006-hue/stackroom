@@ -1,4 +1,5 @@
 com\ragqa\controller\ApiException.class
+com\ragqa\service\GeminiClient.class
 com\ragqa\service\IngestionService.class
 com\ragqa\controller\QaController.class
 com\ragqa\repository\QaHistoryRepository.class
@@ -18,7 +19,6 @@ com\ragqa\entity\DocumentStatus.class
 com\ragqa\entity\Document.class
 com\ragqa\entity\Role.class
 com\ragqa\dto\AuthResponse.class
-com\ragqa\service\OllamaClient.class
 com\ragqa\service\VectorStoreService$RetrievedChunk.class
 com\ragqa\controller\GlobalExceptionHandler.class
 com\ragqa\controller\AuthController.class

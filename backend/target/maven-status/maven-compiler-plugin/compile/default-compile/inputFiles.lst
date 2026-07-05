@@ -3,7 +3,7 @@ C:\Users\archi\OneDrive\Desktop\ragqa\backend\src\main\java\com\ragqa\entity\Rol
 C:\Users\archi\OneDrive\Desktop\ragqa\backend\src\main\java\com\ragqa\dto\RepositoryRequest.java
 C:\Users\archi\OneDrive\Desktop\ragqa\backend\src\main\java\com\ragqa\dto\UserDto.java
 C:\Users\archi\OneDrive\Desktop\ragqa\backend\src\main\java\com\ragqa\dto\SourceDto.java
-C:\Users\archi\OneDrive\Desktop\ragqa\backend\src\main\java\com\ragqa\service\OllamaClient.java
+C:\Users\archi\OneDrive\Desktop\ragqa\backend\src\main\java\com\ragqa\service\GeminiClient.java
 C:\Users\archi\OneDrive\Desktop\ragqa\backend\src\main\java\com\ragqa\repository\UserRepository.java
 C:\Users\archi\OneDrive\Desktop\ragqa\backend\src\main\java\com\ragqa\entity\QaHistory.java
 C:\Users\archi\OneDrive\Desktop\ragqa\backend\src\main\java\com\ragqa\controller\QaController.java
