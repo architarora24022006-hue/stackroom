@@ -31,6 +31,7 @@ com\ragqa\controller\RepositoryController.class
 com\ragqa\repository\TeamRepository.class
 com\ragqa\entity\QaHistory.class
 com\ragqa\controller\DocumentController.class
+com\ragqa\service\BulkQaService.class
 com\ragqa\dto\RegisterRequest.class
 com\ragqa\entity\Chunk.class
 com\ragqa\entity\Team.class
@@ -38,5 +39,7 @@ com\ragqa\entity\Repository.class
 com\ragqa\repository\DocumentRepository.class
 com\ragqa\repository\RepositoryRepository.class
 com\ragqa\RagqaApplication.class
+com\ragqa\service\BulkQaService$1.class
 com\ragqa\service\VectorStoreService.class
+com\ragqa\controller\BulkQaController.class
 com\ragqa\dto\LoginRequest.class

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
-import AuthHero from '../components/AuthHero.jsx'
+import AuthSidePanel from '../components/AuthSidePanel.jsx'
 
 export default function Login() {
   const { login } = useAuth()
@@ -26,20 +26,12 @@ export default function Login() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-      <div className="card" style={{
-        width: '100%', maxWidth: 840, padding: 0, overflow: 'hidden',
-        display: 'grid', gridTemplateColumns: '1fr 1fr',
-        boxShadow: '0 25px 70px rgba(76, 29, 149, 0.45), 0 8px 24px rgba(219, 39, 119, 0.25)',
-      }}>
-        <AuthHero
-          eyebrow="welcome back"
-          title="Answers grounded in what your team actually knows."
-          blurb="Every response here is traced back to the passage it came from — no guesswork, just retrieval you can verify."
-        />
-        <div style={{ padding: '48px 44px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <div className="eyebrow" style={{ marginBottom: 6 }}>sign in</div>
-          <h1 style={{ fontSize: 28, marginBottom: 24 }}>Welcome back</h1>
+    <div style={{ minHeight: '100vh', display: 'grid', gridTemplateColumns: '1fr 1fr' }} className="auth-grid">
+      <AuthSidePanel />
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--color-bg)' }}>
+        <div style={{ width: 380, maxWidth: '90vw' }}>
+          <div className="eyebrow" style={{ marginBottom: 8 }}>welcome back</div>
+          <h1 style={{ fontSize: 30, marginBottom: 28 }}>Sign in to Stackroom</h1>
           {error && <div className="error-banner">{error}</div>}
           <form onSubmit={handleSubmit}>
             <div className="field">
@@ -54,7 +46,7 @@ export default function Login() {
               {submitting ? 'Signing in…' : 'Sign in'}
             </button>
           </form>
-          <p style={{ marginTop: 20, fontSize: 13, color: 'var(--color-ink-soft)' }}>
+          <p style={{ marginTop: 24, fontSize: 13, color: 'var(--color-ink-soft)' }}>
             New team? <Link to="/register" style={{ color: 'var(--color-accent)', fontWeight: 600 }}>Create an account</Link>
           </p>
         </div>

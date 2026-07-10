@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
-import AuthHero from '../components/AuthHero.jsx'
+import AuthSidePanel from '../components/AuthSidePanel.jsx'
 
 export default function Register() {
   const { register } = useAuth()
@@ -28,20 +28,12 @@ export default function Register() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-      <div className="card" style={{
-        width: '100%', maxWidth: 880, padding: 0, overflow: 'hidden',
-        display: 'grid', gridTemplateColumns: '1fr 1fr',
-        boxShadow: '0 25px 70px rgba(76, 29, 149, 0.45), 0 8px 24px rgba(219, 39, 119, 0.25)',
-      }}>
-        <AuthHero
-          eyebrow="new team"
-          title="Turn scattered docs into a searchable, cited knowledge base."
-          blurb="Upload what your team already has. Stackroom chunks, embeds, and indexes it so anyone can ask a question and get a sourced answer."
-        />
-        <div style={{ padding: '48px 44px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <div className="eyebrow" style={{ marginBottom: 6 }}>set up your team</div>
-          <h1 style={{ fontSize: 28, marginBottom: 24 }}>Create your workspace</h1>
+    <div style={{ minHeight: '100vh', display: 'grid', gridTemplateColumns: '1fr 1fr' }} className="auth-grid">
+      <AuthSidePanel />
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--color-bg)' }}>
+        <div style={{ width: 400, maxWidth: '90vw' }}>
+          <div className="eyebrow" style={{ marginBottom: 8 }}>new team</div>
+          <h1 style={{ fontSize: 30, marginBottom: 28 }}>Set up Stackroom</h1>
           {error && <div className="error-banner">{error}</div>}
           <form onSubmit={handleSubmit}>
             <div className="field">
@@ -64,7 +56,7 @@ export default function Register() {
               {submitting ? 'Creating…' : 'Create account'}
             </button>
           </form>
-          <p style={{ marginTop: 20, fontSize: 13, color: 'var(--color-ink-soft)' }}>
+          <p style={{ marginTop: 24, fontSize: 13, color: 'var(--color-ink-soft)' }}>
             Already have a team? <Link to="/login" style={{ color: 'var(--color-accent)', fontWeight: 600 }}>Sign in</Link>
           </p>
         </div>

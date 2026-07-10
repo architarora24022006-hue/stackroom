@@ -3,6 +3,7 @@ C:\Users\archi\OneDrive\Desktop\ragqa\backend\src\main\java\com\ragqa\entity\Rol
 C:\Users\archi\OneDrive\Desktop\ragqa\backend\src\main\java\com\ragqa\dto\RepositoryRequest.java
 C:\Users\archi\OneDrive\Desktop\ragqa\backend\src\main\java\com\ragqa\dto\UserDto.java
 C:\Users\archi\OneDrive\Desktop\ragqa\backend\src\main\java\com\ragqa\dto\SourceDto.java
+C:\Users\archi\OneDrive\Desktop\ragqa\backend\src\main\java\com\ragqa\service\BulkQaService.java
 C:\Users\archi\OneDrive\Desktop\ragqa\backend\src\main\java\com\ragqa\service\GeminiClient.java
 C:\Users\archi\OneDrive\Desktop\ragqa\backend\src\main\java\com\ragqa\repository\UserRepository.java
 C:\Users\archi\OneDrive\Desktop\ragqa\backend\src\main\java\com\ragqa\entity\QaHistory.java
@@ -25,6 +26,7 @@ C:\Users\archi\OneDrive\Desktop\ragqa\backend\src\main\java\com\ragqa\controller
 C:\Users\archi\OneDrive\Desktop\ragqa\backend\src\main\java\com\ragqa\config\SecurityConfig.java
 C:\Users\archi\OneDrive\Desktop\ragqa\backend\src\main\java\com\ragqa\dto\RegisterRequest.java
 C:\Users\archi\OneDrive\Desktop\ragqa\backend\src\main\java\com\ragqa\dto\AskResponse.java
+C:\Users\archi\OneDrive\Desktop\ragqa\backend\src\main\java\com\ragqa\controller\BulkQaController.java
 C:\Users\archi\OneDrive\Desktop\ragqa\backend\src\main\java\com\ragqa\security\JwtService.java
 C:\Users\archi\OneDrive\Desktop\ragqa\backend\src\main\java\com\ragqa\service\ExcelTextExtractor.java
 C:\Users\archi\OneDrive\Desktop\ragqa\backend\src\main\java\com\ragqa\entity\Document.java

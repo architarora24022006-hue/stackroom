@@ -6,7 +6,6 @@ import Register from './pages/Register.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import RepositoryDetail from './pages/RepositoryDetail.jsx'
 import Navbar from './components/Navbar.jsx'
-import BackgroundFX from './components/BackgroundFX.jsx'
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth()
@@ -18,32 +17,29 @@ function ProtectedRoute({ children }) {
 export default function App() {
   const { user } = useAuth()
   return (
-    <div className="app-shell">
-      <BackgroundFX />
-      <div style={{ position: 'relative', zIndex: 1 }}>
-        {user && <Navbar />}
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/repositories/:id"
-            element={
-              <ProtectedRoute>
-                <RepositoryDetail />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </div>
+    <div>
+      {user && <Navbar />}
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/repositories/:id"
+          element={
+            <ProtectedRoute>
+              <RepositoryDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </div>
   )
 }

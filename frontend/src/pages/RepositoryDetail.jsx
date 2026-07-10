@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { api } from '../api/client'
 import DocumentUpload from '../components/DocumentUpload.jsx'
 import ChatPanel from '../components/ChatPanel.jsx'
+import BulkQaUpload from '../components/BulkQaUpload.jsx'
 
 export default function RepositoryDetail() {
   const { id } = useParams()
@@ -41,28 +42,28 @@ export default function RepositoryDetail() {
 
   return (
     <div className="container" style={{ paddingTop: 40, paddingBottom: 60 }}>
-      <Link to="/" style={{ fontSize: 13, color: 'var(--color-accent)', textDecoration: 'none', fontWeight: 600 }}>&larr; All repositories</Link>
+      <Link to="/" style={{ fontSize: 13, color: 'var(--color-ink-soft)', textDecoration: 'none' }}>&larr; All repositories</Link>
       <div style={{ marginTop: 12, marginBottom: 28 }}>
-        <div className="eyebrow" style={{ marginBottom: 6 }}>repository</div>
-        <h1 style={{ fontSize: 28, marginBottom: 6 }}>{repo.name}</h1>
+        <div className="eyebrow" style={{ marginBottom: 8 }}>repository</div>
+        <h1 style={{ fontSize: 32, marginBottom: 8 }}>{repo.name}</h1>
         {repo.description && <p style={{ color: 'var(--color-ink-soft)' }}>{repo.description}</p>}
       </div>
 
       {error && <div className="error-banner">{error}</div>}
 
-      <div style={{ display: 'flex', gap: 6, marginBottom: 24, background: 'var(--color-surface-sunken)', padding: 5, borderRadius: 'var(--radius-md)', width: 'fit-content' }}>
+      <div style={{ display: 'flex', gap: 4, marginBottom: 20, borderBottom: '2px solid var(--color-line)' }}>
         {['ask', 'documents'].map(t => (
           <button
             key={t}
             onClick={() => setTab(t)}
             style={{
-              background: tab === t ? 'var(--color-surface)' : 'transparent',
-              padding: '9px 18px',
-              borderRadius: 'var(--radius-sm)',
-              color: tab === t ? 'var(--color-accent)' : 'var(--color-ink-soft)',
-              fontWeight: 600,
-              boxShadow: tab === t ? 'var(--shadow-card)' : 'none',
-              transition: 'all 0.15s ease',
+              background: 'transparent',
+              padding: '10px 16px',
+              marginBottom: -2,
+              borderBottom: tab === t ? '2px solid var(--color-accent)' : '2px solid transparent',
+              color: tab === t ? 'var(--color-ink)' : 'var(--color-ink-soft)',
+              fontWeight: tab === t ? 700 : 500,
+              borderRadius: 0,
             }}
           >
             {t === 'ask' ? 'Ask' : `Documents (${documents.length})`}
@@ -71,7 +72,10 @@ export default function RepositoryDetail() {
       </div>
 
       {tab === 'ask' ? (
-        <ChatPanel repoId={id} />
+        <div>
+          <BulkQaUpload repoId={id} />
+          <ChatPanel repoId={id} />
+        </div>
       ) : (
         <div>
           <div style={{ marginBottom: 20 }}>
@@ -83,19 +87,10 @@ export default function RepositoryDetail() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {documents.map(doc => (
                 <div key={doc.id} className="card" style={{ padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <div style={{
-                      width: 30, height: 30, borderRadius: 8, background: 'var(--color-accent-soft)',
-                      color: 'var(--color-accent)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 700,
-                    }}>
-                      {(doc.filename?.split('.').pop() || 'doc').slice(0, 3).toUpperCase()}
-                    </div>
-                    <div>
-                      <div style={{ fontSize: 14, fontWeight: 600 }}>{doc.filename}</div>
-                      <div className="eyebrow" style={{ marginTop: 2 }}>
-                        {doc.chunkCount ?? 0} chunks · {doc.status || 'indexed'}
-                      </div>
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 500 }}>{doc.filename}</div>
+                    <div className="eyebrow" style={{ marginTop: 2 }}>
+                      {doc.chunkCount ?? 0} chunks · {doc.status || 'indexed'}
                     </div>
                   </div>
                   <button className="btn-danger" onClick={() => handleDeleteDocument(doc.id)}>Remove</button>

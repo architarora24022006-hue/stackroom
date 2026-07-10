@@ -63,6 +63,30 @@ export const api = {
   askQuestion: (repoId, question) =>
     request(`/repositories/${repoId}/ask`, { method: 'POST', body: { question } }),
   qaHistory: (repoId) => request(`/repositories/${repoId}/qa-history`),
+
+  bulkAsk: async (repoId, file) => {
+    const token = getToken()
+    const formData = new FormData()
+    formData.append('file', file)
+    const res = await fetch(`${API_BASE_URL}/repositories/${repoId}/bulk-qa`, {
+      method: 'POST',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: formData,
+    })
+    if (!res.ok) {
+      let message = `Bulk Q&A failed (${res.status})`
+      try {
+        const data = await res.json()
+        message = data.message || message
+      } catch (_) { /* ignore */ }
+      throw new Error(message)
+    }
+    const disposition = res.headers.get('Content-Disposition') || ''
+    const match = disposition.match(/filename="?([^"]+)"?/)
+    const filename = match ? match[1] : 'answered-questions.xlsx'
+    const blob = await res.blob()
+    return { blob, filename }
+  },
 }
 
 export { getToken }

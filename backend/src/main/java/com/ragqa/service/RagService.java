@@ -33,6 +33,10 @@ public class RagService {
     }
 
     public AskResponse ask(Repository repository, User askedBy, String question) {
+        return ask(repository, askedBy, question, true);
+    }
+
+    public AskResponse ask(Repository repository, User askedBy, String question, boolean saveToHistory) {
         float[] queryEmbedding = geminiClient.embed(question);
 
         List<VectorStoreService.RetrievedChunk> retrieved =
@@ -60,7 +64,9 @@ public class RagService {
                 .map(c -> new SourceDto(c.documentName(), truncate(c.content(), 240), round(c.similarity())))
                 .toList();
 
-        saveHistory(repository, askedBy, question, answer, sources);
+        if (saveToHistory) {
+            saveHistory(repository, askedBy, question, answer, sources);
+        }
 
         return new AskResponse(answer, sources);
     }
