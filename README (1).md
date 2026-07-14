@@ -4,7 +4,7 @@ A full-stack app for teams to build a searchable knowledge base out of their own
 and ask questions about them in plain English — answers are grounded in the actual uploaded
 content, with sources shown for every answer.
 
-**Live app:** https://stackroom.vercel.app _(use this stable domain, not the random-letter
+**Live app:** https://stackroom-seven.vercel.app _(use this stable domain, not the random-letter
 preview URLs Vercel generates on each deploy)_
 **Backend API:** https://stackroom.onrender.com
 
