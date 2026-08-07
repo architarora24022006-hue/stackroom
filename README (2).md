@@ -5,9 +5,6 @@ and ask questions about them in plain English — answers are grounded in the ac
 content, with sources shown for every answer. Also embeddable as a customer-facing chat widget
 on any external website.
 
-**Live app:** https://stackroom-seven.vercel.app _(update this if your Vercel URL changes)_
-**Backend API:** https://stackroom.onrender.com
-
 ## What it does
 
 - Create a team account (one team per account created at signup)
