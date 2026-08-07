@@ -1,8 +1,6 @@
 Stackroom — Team Q&A Knowledge Base (RAG)
 A full-stack app for teams to build a searchable knowledge base out of their own documents, and ask questions about them in plain English — answers are grounded in the actual uploaded content, with sources shown for every answer. Also embeddable as a customer-facing chat widget on any external website.
 
-Live app: https://stackroom-seven.vercel.app (update this if your Vercel URL changes) Backend API: https://stackroom.onrender.com
-
 What it does
 Create a team account (one team per account created at signup)
 Create repositories — one per topic/knowledge area
