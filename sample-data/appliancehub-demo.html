@@ -1,0 +1,833 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ApplianceHub — Home Appliances</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F3F1EC; --surface: #FFFFFF; --ink: #23231F; --ink-soft: #6B685F;
+    --line: #E2DFD5; --accent: #B5482E; --accent-hover: #963A24; --accent-soft: #F3E3DE;
+    --green: #2E7D4F; --green-soft: #E4F0E8;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'IBM Plex Sans', sans-serif; background: var(--bg); color: var(--ink); }
+  h1, h2, h3 { font-family: 'Fraunces', serif; margin: 0; }
+  button { font-family: inherit; }
+
+  /* ---------- Header ---------- */
+  header { background: var(--surface); border-bottom: 1px solid var(--line); padding: 14px 32px; display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
+  header .brand-block { display: flex; align-items: center; gap: 10px; }
+  header .brand { font-family: 'Fraunces', serif; font-weight: 700; font-size: 22px; }
+  header .tag { font-size: 11px; color: var(--ink-soft); letter-spacing: 0.05em; text-transform: uppercase; }
+  .search-bar { flex: 1; min-width: 220px; max-width: 480px; display: flex; }
+  .search-bar input { flex: 1; padding: 9px 12px; border: 1px solid var(--line); border-right: none; border-radius: 6px 0 0 6px; font-family: inherit; font-size: 13.5px; }
+  .search-bar button { padding: 9px 14px; border: 1px solid var(--accent); background: var(--accent); color: #fff; border-radius: 0 6px 6px 0; cursor: pointer; }
+  .header-actions { display: flex; align-items: center; gap: 18px; }
+  .account-pill { font-size: 12.5px; color: var(--ink-soft); }
+  .account-pill strong { display: block; color: var(--ink); font-size: 13px; }
+  #cart-btn { position: relative; background: transparent; border: 1px solid var(--line); border-radius: 8px; padding: 9px 14px; cursor: pointer; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  #cart-btn:hover { border-color: var(--accent); }
+  #cart-count { background: var(--accent); color: #fff; border-radius: 999px; font-size: 11px; font-weight: 700; padding: 1px 7px; min-width: 18px; text-align: center; }
+
+  .hero { padding: 32px 32px 12px; max-width: 1100px; margin: 0 auto; }
+  .hero h1 { font-size: 30px; margin-bottom: 8px; }
+  .hero p { color: var(--ink-soft); font-size: 14.5px; max-width: 640px; }
+
+  .tabs { max-width: 1100px; margin: 24px auto 0; padding: 0 32px; display: flex; gap: 6px; border-bottom: 2px solid var(--line); }
+  .tab-btn { background: transparent; border: none; padding: 10px 16px; margin-bottom: -2px; font-size: 14px; font-weight: 500; color: var(--ink-soft); cursor: pointer; border-bottom: 2px solid transparent; }
+  .tab-btn.active { color: var(--ink); font-weight: 700; border-bottom-color: var(--accent); }
+
+  .grid { max-width: 1100px; margin: 0 auto; padding: 24px 32px 80px; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
+  .grid.hidden { display: none; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px; display: flex; flex-direction: column; }
+  .card .badge { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; background: var(--accent-soft); color: var(--accent); padding: 3px 9px; border-radius: 999px; margin-bottom: 10px; width: fit-content; }
+  .card h3 { font-size: 17px; margin-bottom: 4px; }
+  .card .brand-type { font-size: 12.5px; color: var(--ink-soft); margin-bottom: 10px; }
+  .card .price { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+  .card .features { font-size: 12.5px; color: var(--ink-soft); line-height: 1.5; margin-bottom: 12px; min-height: 56px; }
+  .card .meta { display: flex; gap: 8px; flex-wrap: wrap; font-size: 11px; color: var(--ink-soft); margin-bottom: 14px; }
+  .card .meta span { background: var(--bg); padding: 3px 8px; border-radius: 999px; }
+  .card .card-actions { margin-top: auto; display: flex; gap: 8px; }
+  .btn { border: none; border-radius: 6px; padding: 9px 12px; font-size: 13px; font-weight: 600; cursor: pointer; flex: 1; text-align: center; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-secondary { background: var(--bg); color: var(--ink); border: 1px solid var(--line); }
+  .btn-secondary:hover { border-color: var(--accent); }
+  .btn-block { width: 100%; }
+  .qty-row { display: flex; align-items: center; justify-content: space-between; background: var(--accent-soft); border-radius: 6px; padding: 6px 10px; flex: 1; }
+  .qty-row button { background: none; border: none; font-size: 15px; font-weight: 700; color: var(--accent); cursor: pointer; width: 22px; }
+  .qty-row span { font-weight: 600; font-size: 13.5px; }
+
+  /* ---------- Cart drawer ---------- */
+  .overlay { position: fixed; inset: 0; background: rgba(20,18,14,0.4); z-index: 60; display: none; }
+  .overlay.open { display: block; }
+  #cart-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: 400px; max-width: 92vw; background: var(--surface); z-index: 70; box-shadow: -8px 0 32px rgba(0,0,0,0.2); transform: translateX(100%); transition: transform 0.25s ease; display: flex; flex-direction: column; }
+  #cart-drawer.open { transform: translateX(0); }
+  .drawer-header { padding: 18px 20px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+  .drawer-header h2 { font-size: 19px; }
+  .drawer-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--ink-soft); }
+  #cart-items { flex: 1; overflow-y: auto; padding: 14px 20px; }
+  .cart-empty { color: var(--ink-soft); font-size: 13.5px; text-align: center; margin-top: 40px; }
+  .cart-item { display: flex; justify-content: space-between; gap: 10px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .cart-item .ci-name { font-weight: 600; font-size: 13.5px; margin-bottom: 2px; }
+  .cart-item .ci-sub { font-size: 11.5px; color: var(--ink-soft); margin-bottom: 8px; }
+  .cart-item .ci-remove { background: none; border: none; color: var(--accent); font-size: 12px; cursor: pointer; padding: 0; text-decoration: underline; }
+  .cart-item .ci-right { text-align: right; }
+  .cart-item .ci-price { font-weight: 700; font-size: 14px; margin-bottom: 8px; }
+  .drawer-footer { border-top: 1px solid var(--line); padding: 16px 20px; }
+  .drawer-footer .subtotal-row { display: flex; justify-content: space-between; font-size: 14.5px; margin-bottom: 12px; }
+  .drawer-footer .subtotal-row strong { font-size: 17px; }
+
+  /* ---------- Checkout modal ---------- */
+  #checkout-overlay { position: fixed; inset: 0; background: rgba(20,18,14,0.5); z-index: 80; display: none; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 40px 16px; }
+  #checkout-overlay.open { display: flex; }
+  #checkout-modal { background: var(--surface); border-radius: 12px; width: 640px; max-width: 100%; padding: 28px 32px 32px; }
+  .checkout-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .checkout-head h2 { font-size: 21px; }
+  .checkout-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--ink-soft); }
+  .stepper { display: flex; gap: 6px; margin-bottom: 26px; }
+  .step-pill { flex: 1; text-align: center; padding: 8px 4px; font-size: 11.5px; font-weight: 600; color: var(--ink-soft); background: var(--bg); border-radius: 999px; letter-spacing: 0.02em; }
+  .step-pill.active { background: var(--accent); color: #fff; }
+  .step-pill.done { background: var(--green-soft); color: var(--green); }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+  .field label { font-size: 12px; font-weight: 600; color: var(--ink-soft); }
+  .field input, .field select { padding: 10px 11px; border: 1px solid var(--line); border-radius: 6px; font-family: inherit; font-size: 13.5px; }
+  .pay-method { display: flex; gap: 10px; margin-bottom: 16px; }
+  .pay-method label { flex: 1; border: 1px solid var(--line); border-radius: 8px; padding: 12px; font-size: 13px; font-weight: 600; text-align: center; cursor: pointer; display: block; }
+  .pay-method input { display: none; }
+  .pay-method input:checked + span { color: var(--accent); }
+  .pay-method label:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+  .review-block { background: var(--bg); border-radius: 8px; padding: 14px 16px; margin-bottom: 14px; }
+  .review-block h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-soft); margin-bottom: 6px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 600; }
+  .review-block .rb-line { font-size: 13.5px; margin-bottom: 3px; }
+  .review-item-row { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; }
+  .checkout-total-row { display: flex; justify-content: space-between; font-size: 16px; font-weight: 700; margin: 16px 0; padding-top: 12px; border-top: 1px solid var(--line); }
+  .checkout-nav { display: flex; gap: 10px; margin-top: 8px; }
+  .confirm-box { text-align: center; padding: 20px 0 6px; }
+  .confirm-box .tick { width: 56px; height: 56px; border-radius: 50%; background: var(--green-soft); color: var(--green); font-size: 28px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+  .confirm-box h3 { font-size: 20px; margin-bottom: 8px; }
+  .confirm-box p { color: var(--ink-soft); font-size: 13.5px; margin-bottom: 4px; }
+  .order-id-chip { display: inline-block; background: var(--bg); border-radius: 6px; padding: 6px 14px; font-weight: 700; font-size: 13px; margin: 10px 0 18px; letter-spacing: 0.03em; }
+  .error-text { color: var(--accent); font-size: 12px; margin-top: -6px; margin-bottom: 10px; display: none; }
+  .error-text.show { display: block; }
+
+  /* ---------- AI assistant ---------- */
+  #chat-toggle { position: fixed; bottom: 24px; right: 24px; z-index: 50; background: var(--accent); color: #fff; border: none; border-radius: 999px; padding: 14px 20px; font-weight: 600; font-size: 14px; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 8px; }
+  #chat-toggle:hover { background: var(--accent-hover); }
+  #chat-panel { position: fixed; bottom: 24px; right: 24px; z-index: 55; width: 380px; max-width: 92vw; height: 560px; max-height: 80vh; background: var(--surface); border-radius: 14px; box-shadow: 0 8px 32px rgba(0,0,0,0.25); display: none; flex-direction: column; overflow: hidden; }
+  #chat-panel.open { display: flex; }
+  #chat-header { background: var(--accent); color: #fff; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; }
+  #chat-header .title { font-weight: 700; font-size: 14.5px; display: flex; align-items: center; gap: 6px; }
+  #chat-header .sub { font-size: 11px; opacity: 0.85; margin-top: 2px; }
+  #chat-close { background: transparent; border: none; color: #fff; font-size: 18px; cursor: pointer; }
+  #chat-messages { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .msg { max-width: 88%; padding: 9px 12px; border-radius: 10px; font-size: 13.5px; line-height: 1.45; white-space: pre-wrap; }
+  .msg.user { align-self: flex-end; background: var(--accent); color: #fff; }
+  .msg.bot { align-self: flex-start; background: var(--bg); color: var(--ink); }
+  .msg.action { align-self: flex-start; background: var(--green-soft); color: var(--green); font-weight: 600; }
+  .msg.thinking { align-self: flex-start; font-size: 12.5px; color: var(--ink-soft); }
+  .chip-row { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 14px 10px; }
+  .chip { background: var(--accent-soft); color: var(--accent); border: none; border-radius: 999px; padding: 6px 11px; font-size: 11.5px; font-weight: 600; cursor: pointer; }
+  .chip:hover { background: var(--accent); color: #fff; }
+  #chat-form { display: flex; gap: 8px; padding: 10px; border-top: 1px solid var(--line); }
+  #chat-input { flex: 1; padding: 10px 12px; border: 1px solid var(--line); border-radius: 6px; font-family: inherit; font-size: 13.5px; }
+  #chat-send { background: var(--accent); color: #fff; border: none; border-radius: 6px; padding: 8px 14px; cursor: pointer; font-weight: 600; }
+  #chat-send:disabled { background: #ccc; cursor: not-allowed; }
+
+  @media (max-width: 640px) {
+    .field-row { grid-template-columns: 1fr; }
+    #checkout-modal { padding: 22px 18px 26px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand-block">
+    <div>
+      <div class="brand">ApplianceHub</div>
+      <div class="tag">home appliances, made simple</div>
+    </div>
+  </div>
+  <div class="search-bar">
+    <input id="search-input" type="text" placeholder="Search washing machines, TVs, ACs…" />
+    <button id="search-btn">Search</button>
+  </div>
+  <div class="header-actions">
+    <div class="account-pill"><strong>Demo Account</strong>Deliver to Delhi 110001</div>
+    <button id="cart-btn">🛒 Cart <span id="cart-count">0</span></button>
+  </div>
+</header>
+
+<div class="hero">
+  <h1>Home Appliances</h1>
+  <p>Washing machines, TVs, and air conditioners — browse below, or ask <strong>Arlo</strong>, our shopping assistant, anything. Arlo can compare products, build your cart, and walk you through checkout — click the chat button in the corner.</p>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" data-cat="washing">Washing Machines</button>
+  <button class="tab-btn" data-cat="tv">Televisions</button>
+  <button class="tab-btn" data-cat="ac">Air Conditioners</button>
+</div>
+
+<div class="grid" id="grid-washing"></div>
+<div class="grid hidden" id="grid-tv"></div>
+<div class="grid hidden" id="grid-ac"></div>
+
+<!-- Cart drawer -->
+<div class="overlay" id="cart-overlay"></div>
+<div id="cart-drawer">
+  <div class="drawer-header">
+    <h2>Your Cart</h2>
+    <button class="drawer-close" id="cart-drawer-close">✕</button>
+  </div>
+  <div id="cart-items"></div>
+  <div class="drawer-footer">
+    <div class="subtotal-row"><span>Subtotal</span><strong id="cart-subtotal">₹0</strong></div>
+    <button class="btn btn-primary btn-block" id="go-checkout-btn">Proceed to Checkout</button>
+  </div>
+</div>
+
+<!-- Checkout modal -->
+<div id="checkout-overlay">
+  <div id="checkout-modal">
+    <div class="checkout-head">
+      <h2 id="checkout-title">Checkout</h2>
+      <button class="checkout-close" id="checkout-close">✕</button>
+    </div>
+    <div class="stepper" id="stepper">
+      <div class="step-pill" data-step="1">1. Address</div>
+      <div class="step-pill" data-step="2">2. Payment</div>
+      <div class="step-pill" data-step="3">3. Review</div>
+      <div class="step-pill" data-step="4">4. Confirmed</div>
+    </div>
+    <div id="checkout-body"></div>
+  </div>
+</div>
+
+<button id="chat-toggle">💬 Ask Arlo</button>
+<div id="chat-panel">
+  <div id="chat-header">
+    <div>
+      <div class="title">🤖 Arlo — ApplianceHub Assistant</div>
+      <div class="sub">Ask, compare, add to cart, checkout — all in chat</div>
+    </div>
+    <button id="chat-close">✕</button>
+  </div>
+  <div id="chat-messages"></div>
+  <div class="chip-row" id="chip-row"></div>
+  <form id="chat-form">
+    <input id="chat-input" type="text" placeholder="e.g. add the ChillMax AC to my cart" autocomplete="off" />
+    <button id="chat-send" type="submit">→</button>
+  </form>
+</div>
+
+<script>
+// ---- CONFIGURE THESE TWO VALUES ----
+const STACKROOM_BACKEND_URL = "http://localhost:8080";
+// Upload washing-machines.csv, televisions.csv, and air-conditioners.csv all into
+// the SAME repository so the chatbot can answer across all three categories.
+const STACKROOM_REPOSITORY_ID = "6f600fea-10d0-40a8-8ad1-6ae1346a7993";
+// -------------------------------------
+
+function slugify(name) { return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''); }
+function parsePrice(str) { return parseInt(str.replace(/[^0-9]/g, ''), 10); }
+function formatPrice(n) { return '₹' + n.toLocaleString('en-IN'); }
+
+const washingMachines = [
+  { name: "AquaSpin Pro 700", brand: "AquaSpin", type: "Front Load", capacity: "7 kg", price: "₹28,999", rating: "5 Star",
+    features: "Inverter motor, Steam wash, 1200 RPM spin, Allergen removal cycle", best: "Small–medium families" },
+  { name: "CleanWave Top 65", brand: "CleanWave", type: "Top Load", capacity: "6.5 kg", price: "₹15,999", rating: "3 Star",
+    features: "Fuzzy logic sensor, Rust-free body, 3D wash technology, Child lock", best: "First-time buyers" },
+  { name: "TurboDry Combo 8", brand: "TurboDry", type: "Front Load + Dryer", capacity: "8 kg / 5 kg dry", price: "₹42,999", rating: "4 Star",
+    features: "Wash & dry in one, Sensor drying, Anti-crease, Wi-Fi app control", best: "No balcony drying space" },
+  { name: "EcoWash Mini 55", brand: "EcoWash", type: "Top Load", capacity: "5.5 kg", price: "₹12,499", rating: "4 Star",
+    features: "Compact design, Low water usage, Soft close lid", best: "Bachelors, compact spaces" },
+  { name: "PowerJet Ultra 90", brand: "PowerJet", type: "Front Load", capacity: "9 kg", price: "₹54,999", rating: "5 Star",
+    features: "AI load sensing, Steam sanitize, 1400 RPM, 15-min quick wash", best: "Large families" },
+  { name: "SilentCare 70", brand: "SilentCare", type: "Front Load", capacity: "7 kg", price: "₹31,999", rating: "5 Star",
+    features: "Ultra-quiet motor, Vibration reduction, Baby care cycle", best: "Homes with babies" },
+  { name: "ValueSpin Basic 62", brand: "ValueSpin", type: "Top Load", capacity: "6.2 kg", price: "₹10,999", rating: "3 Star",
+    features: "Manual dial control, Rat-away technology, Wide door", best: "Tight budgets" },
+  { name: "SmartHome Twin 8Plus", brand: "SmartHome", type: "Front Load", capacity: "8 kg", price: "₹47,999", rating: "5 Star",
+    features: "Wi-Fi & voice control, Auto-detergent dispenser, Steam refresh", best: "Tech-savvy homes" },
+  { name: "FreshAir Dual 75", brand: "FreshAir", type: "Top Load", capacity: "7.5 kg", price: "₹18,999", rating: "4 Star",
+    features: "Air dry function, Double waterfall wash, Auto-restart", best: "Balanced price & features" },
+  { name: "ProLaundry Commercial 10", brand: "ProLaundry", type: "Front Load", capacity: "10 kg", price: "₹68,999", rating: "5 Star",
+    features: "Heavy-duty motor, Commercial-grade drum, Auto-dosing", best: "Hostels, home laundry business" },
+];
+
+const televisions = [
+  { name: "VividView 43 Smart", brand: "VividView", type: "43\" LED", capacity: "Full HD", price: "₹22,999", rating: "Android TV",
+    features: "HDR10, Dual-band Wi-Fi, Bezel-less design", best: "Bedrooms, secondary TV" },
+  { name: "CrystalClear 50 UHD", brand: "CrystalClear", type: "50\" LED", capacity: "4K Ultra HD", price: "₹34,999", rating: "Google TV",
+    features: "HDR10+, Dolby Vision, Voice remote", best: "Living rooms, family viewing" },
+  { name: "PixelPro OLED 55", brand: "PixelPro", type: "55\" OLED", capacity: "4K Ultra HD", price: "₹89,999", rating: "WebOS",
+    features: "Self-lit pixels, Perfect blacks, Dolby Atmos", best: "Home theatre enthusiasts" },
+  { name: "FrameStyle 43 Art", brand: "FrameStyle", type: "43\" LED", capacity: "4K Ultra HD", price: "₹38,999", rating: "Tizen",
+    features: "Art mode, Slim wall-mount, Matte display", best: "Design-conscious buyers" },
+  { name: "GameVision 65 Pro", brand: "GameVision", type: "65\" QLED", capacity: "4K Ultra HD", price: "₹79,999", rating: "Google TV",
+    features: "144Hz refresh, Low input lag, VRR support", best: "Gamers" },
+  { name: "ValueScreen 32 HD", brand: "ValueScreen", type: "32\" LED", capacity: "HD Ready", price: "₹10,999", rating: "Linux based",
+    features: "Basic smart features, USB media playback", best: "Kitchens, small rooms" },
+  { name: "UltraBright 75 Mega", brand: "UltraBright", type: "75\" QLED", capacity: "8K Ultra HD", price: "₹1,89,999", rating: "Tizen",
+    features: "8K upscaling, Quantum HDR, Object tracking sound", best: "Premium home theatres" },
+  { name: "EcoView 40 Basic", brand: "EcoView", type: "40\" LED", capacity: "Full HD", price: "₹17,999", rating: "Android TV",
+    features: "Low power use, Simple remote, Wall-mountable", best: "Guest rooms" },
+  { name: "StudioSound 55 Cinema", brand: "StudioSound", type: "55\" QLED", capacity: "4K Ultra HD", price: "₹54,999", rating: "Google TV",
+    features: "Built-in soundbar speakers, Filmmaker mode", best: "Movie nights on a budget" },
+  { name: "CompactSmart 32 Plus", brand: "CompactSmart", type: "32\" LED", capacity: "HD Ready", price: "₹13,499", rating: "Android TV",
+    features: "Compact size, Screen mirroring", best: "Dorm rooms, small apartments" },
+];
+
+const airConditioners = [
+  { name: "FrostFlow Split 1Ton", brand: "FrostFlow", type: "Split AC", capacity: "1 Ton", price: "₹29,999", rating: "3 Star",
+    features: "Turbo cooling, Auto-restart, Sleep mode", best: "Small bedrooms up to 120 sq ft" },
+  { name: "ChillMax Split 1.5Ton", brand: "ChillMax", type: "Split AC", capacity: "1.5 Ton", price: "₹38,999", rating: "5 Star",
+    features: "Inverter compressor, Wi-Fi control, Low noise", best: "Medium rooms up to 150 sq ft" },
+  { name: "PolarBreeze Window 1Ton", brand: "PolarBreeze", type: "Window AC", capacity: "1 Ton", price: "₹24,999", rating: "3 Star",
+    features: "Compact fit, Auto swing, Dehumidifier mode", best: "Single rooms, window fitting" },
+  { name: "IceCore Split 2Ton", brand: "IceCore", type: "Split AC", capacity: "2 Ton", price: "₹52,999", rating: "4 Star",
+    features: "Fast cooling, PM 2.5 filter, Self-clean", best: "Large rooms up to 200 sq ft" },
+  { name: "EcoAir Inverter 1.5Ton", brand: "EcoAir", type: "Split AC", capacity: "1.5 Ton", price: "₹44,999", rating: "5 Star",
+    features: "Dual inverter, Low power bills, Smart diagnosis", best: "Energy-conscious households" },
+  { name: "BudgetCool Window 1.5Ton", brand: "BudgetCool", type: "Window AC", capacity: "1.5 Ton", price: "₹27,999", rating: "3 Star",
+    features: "Value pricing, Basic remote, Rotary compressor", best: "Tight budgets, rentals" },
+  { name: "SilentBreeze Split 1Ton", brand: "SilentBreeze", type: "Split AC", capacity: "1 Ton", price: "₹33,999", rating: "5 Star",
+    features: "Ultra-quiet mode, Sleep curve tech", best: "Light sleepers, bedrooms" },
+  { name: "PowerCool Split 2.5Ton", brand: "PowerCool", type: "Split AC", capacity: "2.5 Ton", price: "₹64,999", rating: "4 Star",
+    features: "Extra-large capacity, Commercial-grade cooling", best: "Offices, shops, large spaces" },
+  { name: "SmartClimate Split 1.5Ton", brand: "SmartClimate", type: "Split AC", capacity: "1.5 Ton", price: "₹47,999", rating: "5 Star",
+    features: "App & voice control, Weather-adaptive cooling", best: "Tech-savvy households" },
+  { name: "ValueChill Window 1Ton", brand: "ValueChill", type: "Window AC", capacity: "1 Ton", price: "₹22,999", rating: "3 Star",
+    features: "Entry-level pricing, Easy installation", best: "First-time AC buyers" },
+];
+
+// Tag every product with an id, numeric price, and category so cart & assistant can reference it.
+const CATALOG = [];
+[[washingMachines, 'washing', 'Washing Machine'], [televisions, 'tv', 'Television'], [airConditioners, 'ac', 'Air Conditioner']]
+  .forEach(([list, cat, label]) => list.forEach(p => {
+    p.id = slugify(p.name);
+    p.priceNum = parsePrice(p.price);
+    p.category = cat;
+    p.categoryLabel = label;
+    CATALOG.push(p);
+  }));
+
+// Cart state must exist before the grid renders (cards read cart quantities on first render).
+let cart = {};
+try { cart = JSON.parse(localStorage.getItem('appliancehub_cart') || '{}'); } catch (e) { cart = {}; }
+
+function renderGrid(elId, items) {
+  document.getElementById(elId).innerHTML = items.map(p => `
+    <div class="card" data-id="${p.id}">
+      <span class="badge">${p.rating}</span>
+      <h3>${p.name}</h3>
+      <div class="brand-type">${p.brand} · ${p.type}</div>
+      <div class="price">${p.price}</div>
+      <div class="features">${p.features}</div>
+      <div class="meta"><span>${p.capacity}</span><span>${p.best}</span></div>
+      <div class="card-actions" id="actions-${p.id}"></div>
+    </div>
+  `).join('');
+  items.forEach(p => renderCardActions(p.id));
+}
+
+function renderCardActions(id) {
+  const holder = document.getElementById('actions-' + id);
+  if (!holder) return;
+  const qty = cart[id] ? cart[id].qty : 0;
+  if (qty > 0) {
+    holder.innerHTML = `
+      <div class="qty-row">
+        <button data-act="dec" data-id="${id}">−</button>
+        <span>${qty} in cart</span>
+        <button data-act="inc" data-id="${id}">+</button>
+      </div>`;
+  } else {
+    holder.innerHTML = `<button class="btn btn-primary" data-act="add" data-id="${id}">Add to Cart</button>
+      <button class="btn btn-secondary" data-act="buy" data-id="${id}">Buy Now</button>`;
+  }
+}
+
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-act]');
+  if (!btn) return;
+  const id = btn.dataset.id;
+  if (btn.dataset.act === 'add') addToCart(id, 1);
+  else if (btn.dataset.act === 'inc') addToCart(id, 1);
+  else if (btn.dataset.act === 'dec') addToCart(id, -1);
+  else if (btn.dataset.act === 'buy') { addToCart(id, 1); openCart(); }
+});
+
+renderGrid('grid-washing', washingMachines);
+renderGrid('grid-tv', televisions);
+renderGrid('grid-ac', airConditioners);
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('grid-washing').classList.toggle('hidden', btn.dataset.cat !== 'washing');
+    document.getElementById('grid-tv').classList.toggle('hidden', btn.dataset.cat !== 'tv');
+    document.getElementById('grid-ac').classList.toggle('hidden', btn.dataset.cat !== 'ac');
+  });
+});
+
+document.getElementById('search-btn').addEventListener('click', runSearch);
+document.getElementById('search-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') runSearch(); });
+function runSearch() {
+  const q = document.getElementById('search-input').value.trim().toLowerCase();
+  if (!q) return;
+  const hit = findProducts(q);
+  if (hit.length) {
+    const cat = hit[0].category;
+    document.querySelector(`.tab-btn[data-cat="${cat}"]`).click();
+  }
+}
+
+// ================= CART =================
+function saveCart() {
+  localStorage.setItem('appliancehub_cart', JSON.stringify(cart));
+  renderCartUI();
+  CATALOG.forEach(p => renderCardActions(p.id));
+}
+
+function addToCart(id, delta) {
+  const product = CATALOG.find(p => p.id === id);
+  if (!product) return;
+  const current = cart[id] ? cart[id].qty : 0;
+  const next = Math.max(0, current + delta);
+  if (next === 0) delete cart[id];
+  else cart[id] = { id, qty: next };
+  saveCart();
+}
+
+function removeFromCart(id) { delete cart[id]; saveCart(); }
+
+function cartEntries() {
+  return Object.values(cart).map(c => ({ ...c, product: CATALOG.find(p => p.id === c.id) })).filter(c => c.product);
+}
+function cartCount() { return cartEntries().reduce((s, c) => s + c.qty, 0); }
+function cartSubtotal() { return cartEntries().reduce((s, c) => s + c.qty * c.product.priceNum, 0); }
+
+function renderCartUI() {
+  document.getElementById('cart-count').textContent = cartCount();
+  const entries = cartEntries();
+  const itemsEl = document.getElementById('cart-items');
+  if (!entries.length) {
+    itemsEl.innerHTML = '<div class="cart-empty">Your cart is empty. Add a product, or ask Arlo to add one for you.</div>';
+  } else {
+    itemsEl.innerHTML = entries.map(c => `
+      <div class="cart-item">
+        <div>
+          <div class="ci-name">${c.product.name}</div>
+          <div class="ci-sub">${c.product.categoryLabel} · Qty ${c.qty}</div>
+          <button class="ci-remove" data-remove="${c.id}">Remove</button>
+        </div>
+        <div class="ci-right">
+          <div class="ci-price">${formatPrice(c.qty * c.product.priceNum)}</div>
+        </div>
+      </div>`).join('');
+    itemsEl.querySelectorAll('[data-remove]').forEach(b => b.addEventListener('click', () => removeFromCart(b.dataset.remove)));
+  }
+  document.getElementById('cart-subtotal').textContent = formatPrice(cartSubtotal());
+}
+
+const cartDrawer = document.getElementById('cart-drawer');
+const cartOverlay = document.getElementById('cart-overlay');
+function openCart() { cartDrawer.classList.add('open'); cartOverlay.classList.add('open'); }
+function closeCart() { cartDrawer.classList.remove('open'); cartOverlay.classList.remove('open'); }
+document.getElementById('cart-btn').addEventListener('click', openCart);
+document.getElementById('cart-drawer-close').addEventListener('click', closeCart);
+cartOverlay.addEventListener('click', closeCart);
+document.getElementById('go-checkout-btn').addEventListener('click', () => { closeCart(); openCheckout(); });
+
+renderCartUI();
+
+// ================= CHECKOUT =================
+let checkoutStep = 1;
+let shippingInfo = {};
+let paymentMethod = 'card';
+let lastOrderId = null;
+
+const checkoutOverlay = document.getElementById('checkout-overlay');
+const checkoutBody = document.getElementById('checkout-body');
+
+function openCheckout() {
+  if (!cartEntries().length) { openCart(); return; }
+  checkoutStep = 1;
+  checkoutOverlay.classList.add('open');
+  renderCheckoutStep();
+}
+function closeCheckout() { checkoutOverlay.classList.remove('open'); }
+document.getElementById('checkout-close').addEventListener('click', closeCheckout);
+
+function setStepper() {
+  document.querySelectorAll('.step-pill').forEach(pill => {
+    const n = parseInt(pill.dataset.step, 10);
+    pill.classList.toggle('active', n === checkoutStep);
+    pill.classList.toggle('done', n < checkoutStep);
+  });
+}
+
+function renderCheckoutStep() {
+  setStepper();
+  if (checkoutStep === 1) renderAddressStep();
+  else if (checkoutStep === 2) renderPaymentStep();
+  else if (checkoutStep === 3) renderReviewStep();
+  else if (checkoutStep === 4) renderConfirmStep();
+}
+
+function renderAddressStep() {
+  document.getElementById('checkout-title').textContent = 'Shipping Address';
+  checkoutBody.innerHTML = `
+    <div class="field"><label>Full name</label><input id="f-name" value="${shippingInfo.name || ''}" placeholder="e.g. Aditi Sharma" /></div>
+    <div class="field"><label>Address line</label><input id="f-address" value="${shippingInfo.address || ''}" placeholder="House no., street, area" /></div>
+    <div class="field-row">
+      <div class="field"><label>City</label><input id="f-city" value="${shippingInfo.city || ''}" placeholder="Delhi" /></div>
+      <div class="field"><label>PIN code</label><input id="f-pin" value="${shippingInfo.pin || ''}" placeholder="110001" /></div>
+    </div>
+    <div class="field"><label>Phone number</label><input id="f-phone" value="${shippingInfo.phone || ''}" placeholder="10-digit mobile number" /></div>
+    <div class="error-text" id="address-error">Please fill in every field before continuing.</div>
+    <div class="checkout-nav">
+      <button class="btn btn-primary btn-block" id="address-continue">Continue to Payment</button>
+    </div>`;
+  document.getElementById('address-continue').addEventListener('click', () => {
+    const name = document.getElementById('f-name').value.trim();
+    const address = document.getElementById('f-address').value.trim();
+    const city = document.getElementById('f-city').value.trim();
+    const pin = document.getElementById('f-pin').value.trim();
+    const phone = document.getElementById('f-phone').value.trim();
+    if (!name || !address || !city || !pin || !phone) {
+      document.getElementById('address-error').classList.add('show');
+      return;
+    }
+    shippingInfo = { name, address, city, pin, phone };
+    checkoutStep = 2;
+    renderCheckoutStep();
+  });
+}
+
+function renderPaymentStep() {
+  document.getElementById('checkout-title').textContent = 'Payment Method';
+  checkoutBody.innerHTML = `
+    <div class="pay-method">
+      <label><input type="radio" name="pm" value="card" ${paymentMethod === 'card' ? 'checked' : ''}><span>💳 Card</span></label>
+      <label><input type="radio" name="pm" value="upi" ${paymentMethod === 'upi' ? 'checked' : ''}><span>📱 UPI</span></label>
+      <label><input type="radio" name="pm" value="cod" ${paymentMethod === 'cod' ? 'checked' : ''}><span>💵 Cash on Delivery</span></label>
+    </div>
+    <div id="pay-fields"></div>
+    <div class="error-text" id="payment-error">Please complete the payment details.</div>
+    <div class="checkout-nav">
+      <button class="btn btn-secondary" id="payment-back">Back</button>
+      <button class="btn btn-primary btn-block" id="payment-continue">Review Order</button>
+    </div>`;
+  renderPayFields();
+  document.querySelectorAll('input[name="pm"]').forEach(r => r.addEventListener('change', (e) => { paymentMethod = e.target.value; renderPayFields(); }));
+  document.getElementById('payment-back').addEventListener('click', () => { checkoutStep = 1; renderCheckoutStep(); });
+  document.getElementById('payment-continue').addEventListener('click', () => {
+    if (!validatePayment()) { document.getElementById('payment-error').classList.add('show'); return; }
+    checkoutStep = 3;
+    renderCheckoutStep();
+  });
+}
+
+function renderPayFields() {
+  const el = document.getElementById('pay-fields');
+  if (paymentMethod === 'card') {
+    el.innerHTML = `
+      <div class="field"><label>Card number</label><input id="f-card" maxlength="19" placeholder="4111 1111 1111 1111" /></div>
+      <div class="field-row">
+        <div class="field"><label>Expiry (MM/YY)</label><input id="f-exp" maxlength="5" placeholder="08/29" /></div>
+        <div class="field"><label>CVV</label><input id="f-cvv" maxlength="3" placeholder="123" /></div>
+      </div>`;
+  } else if (paymentMethod === 'upi') {
+    el.innerHTML = `<div class="field"><label>UPI ID</label><input id="f-upi" placeholder="yourname@upi" /></div>`;
+  } else {
+    el.innerHTML = `<p style="font-size:13px;color:var(--ink-soft);">Pay in cash when your order is delivered. A small COD fee may apply.</p>`;
+  }
+}
+
+function validatePayment() {
+  if (paymentMethod === 'card') {
+    const num = (document.getElementById('f-card')?.value || '').replace(/\s/g, '');
+    const exp = document.getElementById('f-exp')?.value || '';
+    const cvv = document.getElementById('f-cvv')?.value || '';
+    return num.length >= 12 && /^\d{2}\/\d{2}$/.test(exp) && cvv.length === 3;
+  }
+  if (paymentMethod === 'upi') {
+    const upi = document.getElementById('f-upi')?.value || '';
+    return /^[\w.\-]+@[\w]+$/.test(upi);
+  }
+  return true; // COD needs nothing
+}
+
+function renderReviewStep() {
+  document.getElementById('checkout-title').textContent = 'Review Your Order';
+  const entries = cartEntries();
+  const itemsHtml = entries.map(c => `
+    <div class="review-item-row"><span>${c.product.name} × ${c.qty}</span><span>${formatPrice(c.qty * c.product.priceNum)}</span></div>
+  `).join('');
+  const subtotal = cartSubtotal();
+  const shipping = subtotal > 0 && subtotal < 20000 ? 499 : 0;
+  const total = subtotal + shipping;
+  const payLabel = { card: 'Credit/Debit Card', upi: 'UPI', cod: 'Cash on Delivery' }[paymentMethod];
+  checkoutBody.innerHTML = `
+    <div class="review-block"><h4>Items</h4>${itemsHtml}</div>
+    <div class="review-block">
+      <h4>Ship to</h4>
+      <div class="rb-line">${shippingInfo.name} · ${shippingInfo.phone}</div>
+      <div class="rb-line">${shippingInfo.address}, ${shippingInfo.city} ${shippingInfo.pin}</div>
+    </div>
+    <div class="review-block"><h4>Payment</h4><div class="rb-line">${payLabel}</div></div>
+    <div class="checkout-total-row">
+      <span>Total (incl. ${shipping ? formatPrice(shipping) + ' shipping' : 'free shipping'})</span>
+      <span>${formatPrice(total)}</span>
+    </div>
+    <div class="checkout-nav">
+      <button class="btn btn-secondary" id="review-back">Back</button>
+      <button class="btn btn-primary btn-block" id="place-order-btn">Place Order</button>
+    </div>`;
+  document.getElementById('review-back').addEventListener('click', () => { checkoutStep = 2; renderCheckoutStep(); });
+  document.getElementById('place-order-btn').addEventListener('click', () => placeOrder(total));
+}
+
+function placeOrder(total) {
+  document.getElementById('place-order-btn').textContent = 'Processing payment…';
+  document.getElementById('place-order-btn').disabled = true;
+  setTimeout(() => {
+    lastOrderId = 'AH-' + Math.floor(100000 + Math.random() * 900000);
+    lastOrderTotal = total;
+    cart = {};
+    saveCart();
+    checkoutStep = 4;
+    renderCheckoutStep();
+  }, 1100);
+}
+
+let lastOrderTotal = 0;
+function renderConfirmStep() {
+  document.getElementById('checkout-title').textContent = 'Order Confirmed';
+  checkoutBody.innerHTML = `
+    <div class="confirm-box">
+      <div class="tick">✓</div>
+      <h3>Thank you, ${shippingInfo.name.split(' ')[0]}!</h3>
+      <p>Your order has been placed and confirmed.</p>
+      <div class="order-id-chip">Order ${lastOrderId}</div>
+      <p>Total charged: <strong>${formatPrice(lastOrderTotal)}</strong></p>
+      <p>Estimated delivery: 4–6 business days to ${shippingInfo.city} ${shippingInfo.pin}</p>
+      <button class="btn btn-primary" id="continue-shopping-btn" style="margin-top:16px;">Continue Shopping</button>
+    </div>`;
+  document.getElementById('continue-shopping-btn').addEventListener('click', closeCheckout);
+}
+
+// ================= AI ASSISTANT (Arlo) =================
+const toggleBtn = document.getElementById('chat-toggle');
+const closeBtn = document.getElementById('chat-close');
+const panel = document.getElementById('chat-panel');
+const messagesEl = document.getElementById('chat-messages');
+const form = document.getElementById('chat-form');
+const input = document.getElementById('chat-input');
+const sendBtn = document.getElementById('chat-send');
+const chipRow = document.getElementById('chip-row');
+
+const SUGGESTED_QUESTIONS = [
+  "Add the ChillMax Split 1.5Ton to my cart",
+  "What's the best AC for a 150 sq ft room?",
+  "Show me washing machines under ₹20,000",
+  "Compare CrystalClear 50 UHD and PixelPro OLED 55",
+  "What's in my cart?",
+  "Take me to checkout",
+];
+
+function addMessage(text, role) {
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  div.textContent = text;
+  messagesEl.appendChild(div);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  return div;
+}
+
+function renderChips() {
+  chipRow.innerHTML = SUGGESTED_QUESTIONS.map(q => `<button class="chip">${q}</button>`).join('');
+  chipRow.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => {
+    input.value = c.textContent;
+    form.requestSubmit();
+  }));
+}
+
+addMessage("Hi, I'm Arlo 👋 I can answer product questions, compare items, add things to your cart, and take you straight through checkout. Try one of the suggestions below, or just tell me what you need.", 'bot');
+renderChips();
+
+toggleBtn.addEventListener('click', () => { panel.classList.add('open'); toggleBtn.style.display = 'none'; });
+closeBtn.addEventListener('click', () => { panel.classList.remove('open'); toggleBtn.style.display = 'flex'; });
+
+// ---- Intent detection: this is what makes Arlo act, not just answer ----
+function findProducts(query) {
+  const q = query.toLowerCase();
+  const scored = CATALOG.map(p => {
+    let score = 0;
+    if (q.includes(p.name.toLowerCase())) score += 10;
+    if (q.includes(p.brand.toLowerCase())) score += 4;
+    const nameWords = p.name.toLowerCase().split(/\s+/);
+    nameWords.forEach(w => { if (w.length > 2 && q.includes(w)) score += 1; });
+    return { p, score };
+  }).filter(s => s.score > 0).sort((a, b) => b.score - a.score);
+  return scored.map(s => s.p);
+}
+
+function budgetFromQuery(q) {
+  const m = q.match(/(?:under|below|less than)\s*₹?\s*([\d,]+)/i);
+  return m ? parseInt(m[1].replace(/,/g, ''), 10) : null;
+}
+
+function categoryFromQuery(q) {
+  if (/\bac\b|air ?conditioner/i.test(q)) return 'ac';
+  if (/\btv\b|television/i.test(q)) return 'tv';
+  if (/washing machine|washer/i.test(q)) return 'washing';
+  return null;
+}
+
+function parseIntent(rawQ) {
+  const q = rawQ.trim();
+  const lower = q.toLowerCase();
+
+  if (/\b(remove|delete)\b.*\b(cart|basket)\b/.test(lower)) {
+    const matches = findProducts(lower);
+    if (matches.length) return { type: 'remove', product: matches[0] };
+    return { type: 'remove_unknown' };
+  }
+  if (/\badd\b.*\b(cart|basket)\b|\bbuy\b/.test(lower)) {
+    const matches = findProducts(lower);
+    if (matches.length) return { type: 'add', product: matches[0] };
+    return { type: 'add_unknown' };
+  }
+  if (/\b(view|show|what'?s in|open)\b.*\bcart\b|^my cart$/.test(lower)) {
+    return { type: 'view_cart' };
+  }
+  if (/\b(checkout|check out|place (my )?order|proceed to (checkout|payment))\b/.test(lower)) {
+    return { type: 'checkout' };
+  }
+  if (/\btrack\b.*\border\b|order status/.test(lower)) {
+    return { type: 'track' };
+  }
+  if (/\bcompare\b/.test(lower) && (/ and | vs\.? /.test(lower))) {
+    const matches = findProducts(lower);
+    if (matches.length >= 2) return { type: 'compare', products: matches.slice(0, 2) };
+  }
+  const budget = budgetFromQuery(lower);
+  if (budget || /\bcheapest\b/.test(lower)) {
+    const cat = categoryFromQuery(lower);
+    let items = cat ? CATALOG.filter(p => p.category === cat) : CATALOG;
+    if (budget) items = items.filter(p => p.priceNum <= budget);
+    items = items.sort((a, b) => a.priceNum - b.priceNum);
+    return { type: 'filter', items, budget, category: cat };
+  }
+  return null; // fall through to the RAG backend for open-ended / advisory questions
+}
+
+function executeIntent(intent) {
+  switch (intent.type) {
+    case 'add': {
+      addToCart(intent.product.id, 1);
+      return { text: `Added ${intent.product.name} (${intent.product.price}) to your cart. Cart subtotal is now ${formatPrice(cartSubtotal())}. Want me to take you to checkout?`, cls: 'action' };
+    }
+    case 'add_unknown':
+      return { text: `I couldn't find that product by name — could you tell me the exact model, or the category (washing machine, TV, AC) and your budget?`, cls: 'bot' };
+    case 'remove': {
+      if (cart[intent.product.id]) {
+        removeFromCart(intent.product.id);
+        return { text: `Removed ${intent.product.name} from your cart. Subtotal is now ${formatPrice(cartSubtotal())}.`, cls: 'action' };
+      }
+      return { text: `${intent.product.name} isn't currently in your cart.`, cls: 'bot' };
+    }
+    case 'remove_unknown':
+      return { text: `Which item would you like removed? You can say the product name.`, cls: 'bot' };
+    case 'view_cart': {
+      openCart();
+      const entries = cartEntries();
+      if (!entries.length) return { text: `Your cart is empty right now.`, cls: 'action' };
+      const lines = entries.map(c => `• ${c.product.name} × ${c.qty} — ${formatPrice(c.qty * c.product.priceNum)}`).join('\n');
+      return { text: `Here's your cart (${cartCount()} item${cartCount() === 1 ? '' : 's'}):\n${lines}\nSubtotal: ${formatPrice(cartSubtotal())}`, cls: 'action' };
+    }
+    case 'checkout': {
+      if (!cartEntries().length) return { text: `Your cart is empty, so there's nothing to check out yet. Add a product first and I'll take you straight there.`, cls: 'bot' };
+      openCheckout();
+      return { text: `Opening checkout — I've started you on the shipping address step.`, cls: 'action' };
+    }
+    case 'track': {
+      if (lastOrderId) return { text: `Your most recent order ${lastOrderId} is confirmed and estimated to arrive in 4–6 business days.`, cls: 'bot' };
+      return { text: `I don't see a recent order on this device yet. Once you place one, I can track it for you here.`, cls: 'bot' };
+    }
+    case 'compare': {
+      const [a, b] = intent.products;
+      const text = `${a.name} vs ${b.name}\n\n` +
+        `${a.name}: ${a.price}, ${a.capacity}, ${a.rating} — ${a.features}\n\n` +
+        `${b.name}: ${b.price}, ${b.capacity}, ${b.rating} — ${b.features}\n\n` +
+        `${a.priceNum < b.priceNum ? a.name : b.name} is the cheaper option; ${a.priceNum > b.priceNum ? a.name : b.name} has the higher-end feature set.`;
+      return { text, cls: 'bot' };
+    }
+    case 'filter': {
+      if (!intent.items.length) return { text: `I couldn't find anything in that range — want me to check a slightly higher budget?`, cls: 'bot' };
+      const top = intent.items.slice(0, 5);
+      const lines = top.map(p => `• ${p.name} — ${p.price} (${p.categoryLabel})`).join('\n');
+      return { text: `Here's what fits${intent.budget ? ' under ' + formatPrice(intent.budget) : ''}:\n${lines}\nWant me to add any of these to your cart?`, cls: 'bot' };
+    }
+    default:
+      return null;
+  }
+}
+
+async function askBackend(question) {
+  const res = await fetch(`${STACKROOM_BACKEND_URL}/api/public/repositories/${STACKROOM_REPOSITORY_ID}/ask`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ question }),
+  });
+  if (!res.ok) throw new Error('bad response');
+  const data = await res.json();
+  return data.answer;
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const question = input.value.trim();
+  if (!question) return;
+  addMessage(question, 'user');
+  input.value = '';
+  sendBtn.disabled = true;
+
+  // 1. Try to handle it as a direct action Arlo can perform itself (cart, checkout, compare, filter).
+  const intent = parseIntent(question);
+  if (intent) {
+    const result = executeIntent(intent);
+    if (result) {
+      addMessage(result.text, result.cls);
+      sendBtn.disabled = false;
+      return;
+    }
+  }
+
+  // 2. Otherwise fall back to the RAG backend for open-ended / advisory questions.
+  const thinkingEl = addMessage('Thinking…', 'thinking');
+  try {
+    const answer = await askBackend(question);
+    thinkingEl.remove();
+    addMessage(answer, 'bot');
+  } catch (err) {
+    thinkingEl.remove();
+    addMessage("Sorry, I couldn't reach the assistant backend right now. (Is STACKROOM_BACKEND_URL / STACKROOM_REPOSITORY_ID configured, and is the backend running?)", 'bot');
+  } finally {
+    sendBtn.disabled = false;
+  }
+});
+</script>
+
+</body>
+</html>
